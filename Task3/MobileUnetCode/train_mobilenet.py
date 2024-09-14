@@ -8,10 +8,9 @@ from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
 from pytorch_lightning.plugins import MixedPrecisionPlugin
 from torchmetrics import Accuracy, Dice
 from pytorch_lightning.loggers import TensorBoardLogger
-from mobilenet_unet import UNetMobileNet
+from mobileunet_model import MobileUnet
 from dataloaders import get_dataloaders
 from utils import read_yaml_file
-import bitsandbytes as bnb
 # from carbontracker.tracker import CarbonTracker
 
 
@@ -27,7 +26,7 @@ class FastSegModel(pl.LightningModule):
         super(FastSegModel, self).__init__()
         # Define your model
         self.config = config
-        self.model = UNetMobileNet(config["num_classes"])
+        self.model = MobileUnet(config["num_classes"])
         self.criterion = nn.BCEWithLogitsLoss()
         # self.accuracy = Accuracy()
         # self.dice = Dice(num_classes=config["num_classes"])
@@ -46,23 +45,17 @@ class FastSegModel(pl.LightningModule):
         x, y = batch['image'], batch['label']
         logits = self.forward(x)
         loss = self.criterion(logits, y)
-        # acc = self.accuracy(logits, y)
-        # y = y.long()
-        print('shapes: ', x.shape, y.shape)
         dice = dice_score(torch.sigmoid(logits), y)
         self.log('val_loss', loss, prog_bar=True, on_epoch=True, on_step=True)
-        # self.log('val_acc', acc, prog_bar=True, on_epoch=True, on_step=True)
         self.log('val_dice', dice, prog_bar=True, on_epoch=True, on_step=True)
         return loss
 
     def configure_optimizers(self):
         # Create a quantized optimizer
-        optimizer = Adam(self.parameters())
-        # optimizer = bnb.optim.Adam8bit(self.parameters())
-        # optimizer = torch.quantization.quantize_dynamic(optimizer, {torch.optim.Adam}, dtype=torch.qint8)
+        optimizer = Adam(self.parameters(), lr=0.001)
         
         # Use a scheduler that doesn't require setting the learning rate explicitly
-        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=2, verbose=True)
+        scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=3, verbose=True)
         return {
             'optimizer': optimizer,
             'lr_scheduler': {
@@ -71,6 +64,7 @@ class FastSegModel(pl.LightningModule):
                 'frequency': 1
             }
         }
+
 
 def main(config):
     # Early stopping callback
@@ -104,5 +98,12 @@ def main(config):
     trainer.fit(model, train_dataloaders=train_loader, val_dataloaders=val_loader)
 
 if __name__ == '__main__':
-    config = read_yaml_file("config.yaml")
-    main(config)
+
+    for modality in ['FMRI', 'T2W', 'DWI']:
+        config = read_yaml_file("config.yaml")
+        # iterate over different modalities and train the model
+        config["modality_type"] = modality
+        try:
+            main(config)
+        except:
+            print(f"data for {modality} modality is not available")

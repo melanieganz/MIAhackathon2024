@@ -4,11 +4,10 @@ num_epochs: 200
 weight_decay: 0.00001
 num_classes: 1
 img_size: 128
-
-modality_type: "DWI" #FMRI, T2W, DWI
-
+modality_type: "FMRI" #FMRI, T2W, DWI
 random_seed: 42
 
+# please modify these dirs
 images_dir: "/home/jhg307/codes/13_mia_hackathon/data/E2MIP_Challenge_FetalBrainSegmentation/data"
-
+test_save_path: '../test_volume_prediction'
 model_save_dir: "../trained_models"
