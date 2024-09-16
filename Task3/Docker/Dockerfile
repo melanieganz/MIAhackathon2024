@@ -12,8 +12,6 @@ FROM pytorch/pytorch:2.3.1-cuda11.8-cudnn8-runtime
 RUN conda update -n base -c defaults conda && \
     conda install -y python=3.11 && \
     conda update --all --yes
-CMD ["python", "--version"]
-
 
 # Set the working directory to /submission
 WORKDIR /submission
@@ -24,9 +22,6 @@ RUN apt-get update && apt-get install -y wget unzip
 RUN wget https://github.com/melanieganz/MIAhackathon2024/archive/refs/heads/main.zip 
 # Unzip the downloaded file
 RUN unzip main.zip
-CMD ["ls", "-l"]
-# Move unzipper files to /submission
-# RUN mv MIAhackathon2024-main /submission
 
 # Create the necessary directories for loading data into the container.
 RUN mkdir /mnt/training_data \
