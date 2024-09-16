@@ -1,0 +1,7 @@
+torch
+pytorch-lightning
+torchmetrics
+monai
+nibabel
+numpy
+pyyaml
