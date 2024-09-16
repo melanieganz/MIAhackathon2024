@@ -5,8 +5,9 @@ FROM pytorch/pytorch:2.3.1-cuda11.8-cudnn8-runtime
 # Set the working directory to /submission
 WORKDIR /submission
 
+# Ensure this is executed in the local pull of the GITHUB directory https://github.com/melanieganz/MIAhackathon2024
 # Copy all files into the working directory
-COPY . /submission/
+COPY ./Task3 /submission/
 
 # Create the necessary directories for loading data into the container.
 RUN mkdir /mnt/training_data \
