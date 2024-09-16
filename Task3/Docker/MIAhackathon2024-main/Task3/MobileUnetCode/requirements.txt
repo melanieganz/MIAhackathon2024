@@ -1,0 +1,9 @@
+torch
+pytorch-lightning
+torchvision
+monai
+nibabel
+numpy
+pyyaml
+scikit-learn
+

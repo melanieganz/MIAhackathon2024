@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y wget unzip
 RUN wget https://github.com/melanieganz/MIAhackathon2024/archive/refs/heads/main.zip 
 # Unzip the downloaded file
 RUN unzip main.zip
+CMD ["ls", "-l"]
 # Move unzipper files to /submission
 # RUN mv MIAhackathon2024-main /submission
 
@@ -45,7 +46,7 @@ RUN pip install --no-cache-dir -r ./MIAhackathon2024-main/Task3/MobileUnetCode/r
 # This script assumes that there are two shell Skripts for training and test.
 # Make some adjustments if you are using python scripts for example.
 # Ensure the shell scripts are executable.
-RUN chmod +x ./MIAhackathon2024-main/Task3/MobileUnetCode/train.sh ./Task3/MobileUnetCode/inference.sh
+RUN chmod +x ./MIAhackathon2024-main/Task3/MobileUnetCode/train.sh ./MIAhackathon2024-main/Task3/MobileUnetCode/inference.sh
 
 # Set the CMD command to run the desired shell script
 # Example: run `train.sh`
