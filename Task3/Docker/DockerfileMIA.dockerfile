@@ -23,10 +23,10 @@ RUN mkdir /mnt/training_data \
 COPY ./Task3/Docker/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# This script assumes that there are two shell Skripts for training and inference.
+# This script assumes that there are two shell Skripts for training and test.
 # Make some adjustments if you are using python scripts for example.
 # Ensure the shell scripts are executable.
-RUN chmod +x /submission/MobileUnetCode/train.sh /submission/MobileUnetCode/inference.sh
+RUN chmod +x /submission/MobileUnetCode/train.sh /submission/MobileUnetCode/test.sh
 
 # Uncommend the following command line if custom python steps needs to be 
 # exectured during the docker building, for example to download 
@@ -39,4 +39,4 @@ RUN chmod +x /submission/MobileUnetCode/train.sh /submission/MobileUnetCode/infe
 # Set the CMD command to run the desired shell script
 # Example: run `train.sh`
 CMD ["bash", "/submission/MobileUnetCode/train.sh"]
-CMD ["bash", "/submission/MobileUnetCode/inference.sh"]
+CMD ["bash", "/submission/MobileUnetCode/test.sh"]
