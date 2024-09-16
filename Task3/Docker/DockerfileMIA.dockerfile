@@ -19,7 +19,7 @@ RUN mkdir /mnt/training_data \
     && mkdir /mnt/predicted_data
 
 # Install additional Python dependencies via a requirements file.
-# Install any needed packages specified in requirements.txt
+# Install any needed packages specified in requirements.txt, added a global requirements.txt outside of the MobileUnetCode folder
 COPY ./Task3/Docker/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
