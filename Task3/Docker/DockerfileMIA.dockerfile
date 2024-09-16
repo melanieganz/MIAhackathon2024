@@ -1,6 +1,9 @@
 # Make sure to use a base image from the official Docker Hub repository with a specific version.
 # Visit https://hub.docker.com/ for more information.
 FROM pytorch/pytorch:2.3.1-cuda11.8-cudnn8-runtime 
+# Install torchvision
+RUN pip install torchvision
+
 
 # Set the working directory to /submission
 WORKDIR /submission
@@ -16,6 +19,8 @@ RUN mkdir /mnt/training_data \
     && mkdir /mnt/predicted_data
 
 # Install additional Python dependencies via a requirements file.
+# Install any needed packages specified in requirements.txt
+COPY ./Task3/Docker/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # This script assumes that there are two shell Skripts for training and inference.
