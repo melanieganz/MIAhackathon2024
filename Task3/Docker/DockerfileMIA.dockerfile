@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # This script assumes that there are two shell Skripts for training and inference.
 # Make some adjustments if you are using python scripts for example.
 # Ensure the shell scripts are executable.
-RUN chmod +x /submission/train.sh /submission/inference.sh
+RUN chmod +x /submission/MobileUnetCode/train.sh /submission/MobileUnetCode/inference.sh
 
 # Uncommend the following command line if custom python steps needs to be 
 # exectured during the docker building, for example to download 
@@ -38,4 +38,5 @@ RUN chmod +x /submission/train.sh /submission/inference.sh
 
 # Set the CMD command to run the desired shell script
 # Example: run `train.sh`
-CMD ["bash", "/submission/train.sh"]
+CMD ["bash", "/submission/MobileUnetCode/train.sh"]
+CMD ["bash", "/submission/MobileUnetCode/inference.sh"]
