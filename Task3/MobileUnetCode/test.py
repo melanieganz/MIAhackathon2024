@@ -1,17 +1,12 @@
 import os
 from glob import glob
 import numpy as np
-
 import torch
-
 from monai import config
 import monai.transforms as tr
 from monai.data import decollate_batch, Dataset, DataLoader
 from monai.inferers import SliceInferer
-from monai.metrics import DiceMetric
-from monai.networks.nets import UNet
-from monai.transforms import Activations, AsDiscrete, Compose, LoadImage, SaveImage, ScaleIntensity, \
-    ResizeWithPadOrCrop, MapTransform, SaveImaged
+from monai.transforms import MapTransform, SaveImaged
 
 import warnings
 
@@ -76,7 +71,9 @@ def test(config):
 
     # load data
     # test_images = sorted(glob(os.path.join(args.testing_data_path, "*.nii.gz")))
-    test_images = sorted(glob(os.path.join(config["images_dir"], "test_volume", f"images/{config['modality_type']}*.nii.gz")))
+    test_images = sorted(glob(os.path.join(config["test_data_dir"], "test_volume", f"images/{config['modality_type']}*.nii.gz")))
+    if len(test_images)==0:
+        test_images = sorted(glob(os.path.join(config["test_data_dir"], f"{config['modality_type']}*.nii.gz")))
 
     test_files = [{"image": image_name} for image_name in test_images]
 

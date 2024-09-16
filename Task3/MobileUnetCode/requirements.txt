@@ -1,7 +1,8 @@
 torch
 pytorch-lightning
-torchmetrics
+torchvision
 monai
 nibabel
 numpy
 pyyaml
+scikit-learn

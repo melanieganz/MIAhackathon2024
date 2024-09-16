@@ -5,8 +5,6 @@ import pytorch_lightning as pl
 from torch.optim import Adam
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint
-from pytorch_lightning.plugins import MixedPrecisionPlugin
-from torchmetrics import Accuracy, Dice
 from pytorch_lightning.loggers import TensorBoardLogger
 from mobileunet_model import MobileUnet
 from dataloaders import get_dataloaders

@@ -7,7 +7,16 @@ img_size: 128
 modality_type: "FMRI" #FMRI, T2W, DWI
 random_seed: 42
 
-# please modify these dirs
+#TODO: comment and uncomment the true dirs 
+
+# dirs on my local
 images_dir: "/home/jhg307/codes/13_mia_hackathon/data/E2MIP_Challenge_FetalBrainSegmentation/data"
+test_data_dir: "/home/jhg307/codes/13_mia_hackathon/data/E2MIP_Challenge_FetalBrainSegmentation/data"
 test_save_path: '../test_volume_prediction'
 model_save_dir: "../trained_models"
+
+# based on challenge instructions
+# images_dir: "/mnt/training_data"
+# test_data_dir: "/mnt/query_data"
+# test_save_path: '/mnt/predicted_data'
+# model_save_dir: "/mnt/training_results"

@@ -8,6 +8,7 @@ import nibabel as nib
 import numpy as np
 import monai
 import torch
+from sklearn.model_selection import train_test_split
 
 
 def get_raw_data_nibabel(nifti_file):
@@ -127,19 +128,40 @@ def get_3d_dataloader_train(images_dir, labels_dir, config):
     )
     return slicewise_dataloader
 
+def get_image_label_dirs(config):
+    train_images = sorted(glob(os.path.join(config["images_dir"], "train_slice", f"images/{config['modality_type']}*.nii.gz")))
+    train_labels = sorted(glob(os.path.join(config["images_dir"], "train_slice", f"masks/{config['modality_type']}*.nii.gz")))
+    # check for another dir in case train data is not available
+    if len(train_images)==0:
+        train_images = sorted(glob(os.path.join(config["images_dir"], f"images/{config['modality_type']}*.nii.gz")))
+        train_labels = sorted(glob(os.path.join(config["images_dir"], f"masks/{config['modality_type']}*.nii.gz")))
+    
+    # load validation data
+    validation_images = sorted(glob(os.path.join(config["images_dir"], "validation_slice", f"images/{config['modality_type']}*.nii.gz")))
+    validation_labels = sorted(glob(os.path.join(config["images_dir"], "validation_slice", f"masks/{config['modality_type']}*.nii.gz")))
+    # check for another dir in case validation data is not available
+    if len(validation_images)==0:
+        validation_images = sorted(glob(os.path.join(config["images_dir"], f"images/{config['modality_type']}*.nii.gz")))
+        validation_labels = sorted(glob(os.path.join(config["images_dir"], f"masks/{config['modality_type']}*.nii.gz")))
+
+    # check if we don't have validation images => split the training set
+    if len(validation_images)==0:
+        train_images, train_labels, validation_images, validation_labels = train_test_split(train_images, train_labels, test_size=0.2, random_state=42)
+
+    return train_images, train_labels, validation_images, validation_labels
+
 
 def get_dataloaders(config):
     # load train data
-    train_images = sorted(glob(os.path.join(config["images_dir"], "train_slice", f"images/{config['modality_type']}*.nii.gz")))
-    train_labels = sorted(glob(os.path.join(config["images_dir"], "train_slice", f"masks/{config['modality_type']}*.nii.gz")))
+    
+    train_images, train_labels, validation_images, validation_labels = get_image_label_dirs(config)
+    
+
     if check_for_2d(train_images[0]):
         train_loader = get_2d_dataloader_train(train_images, train_labels, config)
     else:
         train_loader = get_3d_dataloader_train(train_images, train_labels, config)
 
-    # load validation data
-    validation_images = sorted(glob(os.path.join(config["images_dir"], "validation_slice", f"images/{config['modality_type']}*.nii.gz")))
-    validation_labels = sorted(glob(os.path.join(config["images_dir"], "validation_slice", f"masks/{config['modality_type']}*.nii.gz")))
     if check_for_2d(validation_images[0]):
         val_loader = get_2d_dataloader_train(validation_images, validation_labels, config)
     else:

@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torchvision.models as models
+import os
+
 
 class DepthwiseSeparableConv(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False):
@@ -21,8 +22,19 @@ class MobileUnet(nn.Module):
     def __init__(self, n_classes):
         super(MobileUnet, self).__init__()
         
-        # Load the pre-trained MobileNet model with weights
-        mobilenet = models.mobilenet_v2(weights="IMAGENET1K_V1")
+        # download or load the weights for mobilenet
+        weights_dir = "pretrained_weights"
+        os.makedirs(weights_dir, exist_ok=True)
+        weights_path = os.path.join(weights_dir, "mobilenet_v2.pth")
+        if not os.path.exists(weights_path):
+            print("Downloading weights...")
+            mobilenet = models.mobilenet_v2(weights="IMAGENET1K_V1")
+            torch.save(mobilenet.state_dict(), weights_path)
+        else:
+            print("Loading weights from local directory...")
+            mobilenet = models.mobilenet_v2(weights=None)
+            mobilenet.load_state_dict(torch.load(weights_path, weights_only=True))
+
         # Modify the first convolution layer to accept single-channel input
         mobilenet.features[0][0] = nn.Conv2d(1, 32, kernel_size=3, stride=2, padding=1, bias=False)
         self.relu = nn.ReLU6(inplace=True)
@@ -85,7 +97,7 @@ class MobileUnet(nn.Module):
 if __name__=="__main__":
     # Instantiate the model
     n_classes = 1  # Assuming binary segmentation, change as needed
-    model = UNetMobileNet(n_classes)
+    model = MobileUnet(n_classes)
 
     # Example input tensor with shape [batch_size, channels, height, width]
     input_tensor = torch.randn(1, 1, 128, 128)
