@@ -40,14 +40,14 @@ RUN mkdir /mnt/training_data \
 
 # Install additional Python dependencies via a requirements file.
 # Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r ./Task3/MobileUnetCode/requirements.txt
+RUN pip install --no-cache-dir -r ./MIAhackathon2024-main/Task3/MobileUnetCode/requirements.txt
 
 # This script assumes that there are two shell Skripts for training and test.
 # Make some adjustments if you are using python scripts for example.
 # Ensure the shell scripts are executable.
-RUN chmod +x ./Task3/MobileUnetCode/train.sh ./Task3/MobileUnetCode/inference.sh
+RUN chmod +x ./MIAhackathon2024-main/Task3/MobileUnetCode/train.sh ./Task3/MobileUnetCode/inference.sh
 
 # Set the CMD command to run the desired shell script
 # Example: run `train.sh`
-CMD ["bash", "./Task3/MobileUnetCode/train.sh"]
-CMD ["bash", "./Task3/MobileUnetCode/inference.sh"]
+CMD ["bash", "./MIAhackathon2024-main/Task3/MobileUnetCode/train.sh"]
+CMD ["bash", "./MIAhackathon2024-main/Task3/MobileUnetCode/inference.sh"]
