@@ -19,11 +19,13 @@ CMD ["python", "--version"]
 WORKDIR /submission
 
 # Download the code from the GitHub repository
+# Install wget with apt-get
+RUN apt-get update && apt-get install -y wget unzip
 RUN wget https://github.com/melanieganz/MIAhackathon2024/archive/refs/heads/main.zip 
 # Unzip the downloaded file
 RUN unzip main.zip
 # Move unzipper files to /submission
-RUN mv MIAhackathon2024-main /submission
+# RUN mv MIAhackathon2024-main /submission
 
 # Create the necessary directories for loading data into the container.
 RUN mkdir /mnt/training_data \
@@ -37,15 +39,15 @@ RUN mkdir /mnt/training_data \
 # and the predicted_data has the output of our prediction
 
 # Install additional Python dependencies via a requirements file.
-# Install any needed packages specified in requirements.txt, added a global requirements.txt outside of the MobileUnetCode folder
-RUN pip install --no-cache-dir -r /submission/Task3/MobileUnetCode/requirements.txt
+# Install any needed packages specified in requirements.txt
+RUN pip install --no-cache-dir -r ./Task3/MobileUnetCode/requirements.txt
 
 # This script assumes that there are two shell Skripts for training and test.
 # Make some adjustments if you are using python scripts for example.
 # Ensure the shell scripts are executable.
-RUN chmod +x /submission/Task3/MobileUnetCode/train.sh /submission/Task3/MobileUnetCode/inference.sh
+RUN chmod +x ./Task3/MobileUnetCode/train.sh ./Task3/MobileUnetCode/inference.sh
 
 # Set the CMD command to run the desired shell script
 # Example: run `train.sh`
-CMD ["bash", "/submission/Task3/MobileUnetCode/train.sh"]
-CMD ["bash", "/submission/Task3/MobileUnetCode/inference.sh"]
+CMD ["bash", "./Task3/MobileUnetCode/train.sh"]
+CMD ["bash", "./Task3/MobileUnetCode/inference.sh"]

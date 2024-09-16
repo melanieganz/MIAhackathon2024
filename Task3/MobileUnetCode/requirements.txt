@@ -6,4 +6,3 @@ nibabel
 numpy
 pyyaml
 scikit-learn
-
